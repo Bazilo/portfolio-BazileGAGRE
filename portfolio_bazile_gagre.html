@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bazile Gagré – Géomaticien Senior & Expert SIG</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --earth: #2C4A1E;
+    --earth-light: #3D6B2A;
+    --savanna: #C8841A;
+    --gold: #E8A93A;
+    --sand: #F5EDD6;
+    --cream: #FAFAF5;
+    --dark: #1A1A14;
+    --text: #2E2E24;
+    --muted: #6B6B58;
+    --accent: #7AB648;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--savanna);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--savanna);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s ease, opacity 0.3s ease;
+    opacity: 0.5;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(250,250,245,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(44,74,30,0.1);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--earth);
+    letter-spacing: 0.02em;
+  }
+  .nav-logo span { color: var(--savanna); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--earth); }
+  .nav-cta {
+    background: var(--earth);
+    color: white !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2px;
+  }
+  .nav-cta:hover { background: var(--earth-light); color: white !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    background: var(--earth);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 5rem 5rem 6rem;
+    position: relative;
+  }
+  .hero-left::after {
+    content: '';
+    position: absolute; right: -1px; top: 0; bottom: 0;
+    width: 80px;
+    background: var(--cream);
+    clip-path: polygon(40px 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.0;
+    margin-bottom: 1rem;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-title {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 380px;
+  }
+  .hero-stats {
+    display: flex; gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--savanna);
+    color: white;
+    padding: 0.9rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+  .btn-secondary {
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 0.9rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: white; transform: translateY(-2px); }
+
+  .hero-right {
+    background: var(--sand);
+    display: flex; align-items: center; justify-content: center;
+    padding: 8rem 5rem 5rem;
+    position: relative;
+  }
+  .map-visual {
+    width: 100%; max-width: 420px;
+    position: relative;
+  }
+  /* Africa SVG map placeholder with decorative elements */
+  .africa-container {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .africa-svg {
+    width: 320px;
+    filter: drop-shadow(0 20px 40px rgba(44,74,30,0.15));
+  }
+  .ping {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--savanna);
+    border-radius: 50%;
+  }
+  .ping::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--savanna);
+    animation: ping 1.8s ease-out infinite;
+    opacity: 0;
+  }
+  @keyframes ping {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  .ping-paris { top: 12%; left: 42%; }
+  .ping-monaco { top: 17%; left: 46%; }
+  .ping-ouaga { top: 52%; left: 38%; }
+  .ping-label {
+    position: absolute;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--earth);
+    background: white;
+    padding: 2px 6px;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    white-space: nowrap;
+  }
+  .label-paris { top: 9%; left: 46%; }
+  .label-ouaga { top: 55%; left: 44%; }
+
+  /* SECTION BASE */
+  section { padding: 7rem 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 4rem; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--savanna);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 900;
+    color: var(--earth);
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+  }
+  .section-lead {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 600px;
+  }
+
+  /* SERVICES */
+  #services { background: var(--cream); }
+  .services-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+    margin-bottom: 5rem;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: rgba(44,74,30,0.08);
+  }
+  .service-card {
+    background: var(--cream);
+    padding: 2.5rem 2rem;
+    transition: background 0.25s, transform 0.25s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 3px;
+    background: var(--savanna);
+    transition: width 0.3s ease;
+  }
+  .service-card:hover { background: white; transform: translateY(-4px); }
+  .service-card:hover::before { width: 100%; }
+  .service-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .service-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--earth);
+    margin-bottom: 0.8rem;
+    line-height: 1.3;
+  }
+  .service-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .service-targets {
+    margin-top: 1.2rem;
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .target-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--sand);
+    color: var(--earth);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  /* EXPERTISE ACADÉMIQUE */
+  #enseignement { background: var(--earth); }
+  #enseignement .section-tag { color: var(--gold); }
+  #enseignement .section-title { color: white; }
+  #enseignement .section-lead { color: rgba(255,255,255,0.65); }
+  .teaching-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+  .teaching-block {
+    border-left: 3px solid var(--savanna);
+    padding-left: 2rem;
+  }
+  .teaching-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: white;
+    margin-bottom: 1rem;
+  }
+  .teaching-block ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .teaching-block li {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .teaching-block li::before {
+    content: '→';
+    color: var(--gold);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+  }
+  .africa-focus {
+    margin-top: 4rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 3rem;
+    border-radius: 2px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  .africa-icon {
+    font-size: 3.5rem;
+    line-height: 1;
+  }
+  .africa-focus h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 0.7rem;
+  }
+  .africa-focus p {
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+
+  /* PARCOURS */
+  #parcours { background: var(--sand); }
+  .timeline {
+    position: relative;
+    margin-top: 4rem;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 0; top: 8px; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--savanna), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3.5rem;
+    padding-left: 2.5rem;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -2.5rem;
+    top: 6px;
+    width: 12px; height: 12px;
+    background: var(--savanna);
+    border-radius: 50%;
+    border: 3px solid var(--sand);
+  }
+  .timeline-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--savanna);
+    margin-bottom: 0.4rem;
+  }
+  .timeline-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--earth);
+    margin-bottom: 0.3rem;
+  }
+  .timeline-org {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    font-style: italic;
+  }
+  .timeline-points {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.35rem;
+  }
+  .timeline-points li {
+    font-size: 0.88rem;
+    color: var(--text);
+    padding-left: 1rem;
+    position: relative;
+  }
+  .timeline-points li::before {
+    content: '•';
+    position: absolute; left: 0;
+    color: var(--savanna);
+  }
+
+  /* OUTILS */
+  #outils { background: var(--cream); }
+  .tools-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    margin-top: 4rem;
+    align-items: start;
+  }
+  .tool-category {
+    margin-bottom: 2.5rem;
+  }
+  .tool-cat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--savanna);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(44,74,30,0.12);
+  }
+  .tool-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .tool-tag {
+    background: white;
+    border: 1px solid rgba(44,74,30,0.15);
+    color: var(--earth);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.82rem;
+    border-radius: 2px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .tool-tag:hover { background: var(--earth); color: white; border-color: var(--earth); }
+  .certifs-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--earth);
+    margin-bottom: 1.5rem;
+  }
+  .certif-item {
+    display: flex; gap: 1rem;
+    margin-bottom: 1.2rem;
+    align-items: flex-start;
+  }
+  .certif-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .certif-item p {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .certif-item strong {
+    color: var(--earth);
+    font-weight: 600;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--dark); }
+  #contact .section-tag { color: var(--gold); }
+  #contact .section-title { color: white; }
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    margin-top: 4rem;
+    align-items: start;
+  }
+  .contact-text p {
+    color: rgba(255,255,255,0.6);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+  .contact-infos { display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-line {
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .contact-icon {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .contact-line a, .contact-line span {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .contact-line a:hover { color: var(--gold); }
+  .contact-form {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-input, .form-textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 0.9rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .form-input:focus, .form-textarea:focus { border-color: var(--savanna); }
+  .form-textarea { min-height: 120px; resize: vertical; }
+  .btn-send {
+    background: var(--savanna);
+    color: white;
+    padding: 1rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 2px;
+    cursor: none;
+    transition: background 0.2s, transform 0.2s;
+    align-self: flex-start;
+  }
+  .btn-send:hover { background: var(--gold); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.08em;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.4);
+  }
+  .footer-logo span { color: var(--savanna); }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* DIVIDER */
+  .slash-divider {
+    font-family: 'Space Mono', monospace;
+    color: var(--savanna);
+    font-size: 1.2rem;
+    opacity: 0.4;
+    margin: 0 0.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 7rem 2rem 4rem; }
+    nav { padding: 1rem 2rem; }
+    .nav-links { display: none; }
+    .container { padding: 0 2rem; }
+    .services-intro, .teaching-grid, .tools-layout, .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">B.<span>Gagré</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#enseignement">Enseignement</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#outils">Outils</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+  <div class="hero-left">
+    <div class="hero-tag">Géomaticien Senior · Expert SIG · Enseignant Chercheur</div>
+    <h1 class="hero-name">Bazile<br><em>Gagré</em></h1>
+    <p class="hero-title">Architecte de solutions géospatiales pour les territoires africains et européens. Consultant, formateur et chef de projet SIG au service des gouvernements, universités et ONG.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">8+</span>
+        <span class="stat-label">Années d'exp.</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Universités</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">5</span>
+        <span class="stat-label">Institutions</span>
+      </div>
+    </div>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary">Mes services</a>
+      <a href="#contact" class="btn-secondary">Me contacter</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="africa-container">
+      <!-- Africa SVG -->
+      <svg class="africa-svg" viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simplified Africa outline -->
+        <path d="M170 20 L230 18 L275 35 L310 65 L330 100 L340 140 L335 185 L345 220 L355 260 L360 300 L350 340 L330 375 L300 405 L270 430 L245 460 L220 490 L200 520 L185 490 L160 465 L130 440 L100 405 L75 370 L55 330 L45 290 L50 250 L60 210 L65 170 L75 130 L90 90 L115 55 L145 30 Z" fill="#3D6B2A" opacity="0.18"/>
+        <path d="M170 20 L230 18 L275 35 L310 65 L330 100 L340 140 L335 185 L345 220 L355 260 L360 300 L350 340 L330 375 L300 405 L270 430 L245 460 L220 490 L200 520 L185 490 L160 465 L130 440 L100 405 L75 370 L55 330 L45 290 L50 250 L60 210 L65 170 L75 130 L90 90 L115 55 L145 30 Z" stroke="#2C4A1E" stroke-width="2.5" fill="none"/>
+        <!-- Madagascar -->
+        <ellipse cx="340" cy="370" rx="18" ry="42" fill="#3D6B2A" opacity="0.15" stroke="#2C4A1E" stroke-width="1.5"/>
+        <!-- Compass -->
+        <circle cx="330" cy="80" r="22" fill="white" opacity="0.85"/>
+        <text x="330" y="85" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#2C4A1E">N ✦</text>
+        <!-- Grid lines -->
+        <line x1="40" y1="200" x2="370" y2="200" stroke="#2C4A1E" stroke-width="0.5" opacity="0.12" stroke-dasharray="4,6"/>
+        <line x1="40" y1="320" x2="370" y2="320" stroke="#2C4A1E" stroke-width="0.5" opacity="0.12" stroke-dasharray="4,6"/>
+        <line x1="200" y1="10" x2="200" y2="530" stroke="#2C4A1E" stroke-width="0.5" opacity="0.12" stroke-dasharray="4,6"/>
+        <!-- Tropic of Cancer / Equator labels -->
+        <text x="42" y="198" font-family="Space Mono" font-size="6" fill="#2C4A1E" opacity="0.4">ÉQUATEUR</text>
+        <!-- Ouagadougou marker -->
+        <circle cx="172" cy="228" r="6" fill="#C8841A"/>
+        <circle cx="172" cy="228" r="11" fill="none" stroke="#C8841A" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="172" cy="228" r="16" fill="none" stroke="#C8841A" stroke-width="1" opacity="0.2"/>
+        <text x="183" y="225" font-family="Space Mono" font-size="7" fill="#C8841A" font-weight="bold">Ouagadougou</text>
+        <!-- Dakar marker -->
+        <circle cx="90" cy="192" r="4" fill="#7AB648"/>
+        <text x="98" y="189" font-family="Space Mono" font-size="6" fill="#7AB648">Dakar</text>
+        <!-- Abidjan marker -->
+        <circle cx="145" cy="280" r="4" fill="#7AB648"/>
+        <text x="153" y="277" font-family="Space Mono" font-size="6" fill="#7AB648">Abidjan</text>
+        <!-- Nairobi marker -->
+        <circle cx="265" cy="300" r="4" fill="#7AB648"/>
+        <text x="273" y="297" font-family="Space Mono" font-size="6" fill="#7AB648">Nairobi</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="services-intro fade-in">
+      <div>
+        <div class="section-tag">Ce que je propose</div>
+        <h2 class="section-title">Expertises &<br>Services</h2>
+      </div>
+      <p class="section-lead">De la mise en place d'infrastructures SIG d'entreprise à la formation universitaire, j'accompagne gouvernements, collectivités, entreprises et ONG dans leur transformation géospatiale.</p>
+    </div>
+    <div class="services-grid fade-in">
+
+      <div class="service-card">
+        <span class="service-icon">🗺️</span>
+        <h3>Architecture & Déploiement SIG</h3>
+        <p>Conception et mise en œuvre d'architectures géomatiques complètes (ArcGIS Enterprise, QGIS, PostGIS). Structuration de bases de données territoriales et patrimoniales.</p>
+        <div class="service-targets">
+          <span class="target-chip">Gouvernements</span>
+          <span class="target-chip">Collectivités</span>
+          <span class="target-chip">ONG</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">📊</span>
+        <h3>Analyses Territoriales & Observatoires</h3>
+        <p>Production d'analyses spatiales, tableaux de bord cartographiques et observatoires pour l'aide à la décision en matière d'aménagement, environnement et développement.</p>
+        <div class="service-targets">
+          <span class="target-chip">États</span>
+          <span class="target-chip">Agences</span>
+          <span class="target-chip">ONG</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🌐</span>
+        <h3>Webmapping & Applications Métiers</h3>
+        <p>Développement de portails cartographiques publics et d'applications SIG métiers (cadastre, urbanisme, réseaux, espaces verts) accessibles sur desktop et mobile.</p>
+        <div class="service-targets">
+          <span class="target-chip">Municipalités</span>
+          <span class="target-chip">Entreprises</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🎓</span>
+        <h3>Formation & Enseignement SIG</h3>
+        <p>Cours universitaires en QGIS, ArcGIS Pro, SIG Web open source. Formations intra-entreprise et accompagnement des équipes géomatiques, de l'initiation au niveau avancé.</p>
+        <div class="service-targets">
+          <span class="target-chip">Universités</span>
+          <span class="target-chip">Grandes écoles</span>
+          <span class="target-chip">Équipes</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">📋</span>
+        <h3>Conduite de Projets & Marchés Publics</h3>
+        <p>Pilotage de marchés publics, coordination de prestataires, planification et contrôle qualité. Méthodes Agile et cascade selon les contextes institutionnels.</p>
+        <div class="service-targets">
+          <span class="target-chip">Secteur public</span>
+          <span class="target-chip">Syndicats mixtes</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">📡</span>
+        <h3>SIG Humanitaire & Développement</h3>
+        <p>Cartographie participative, collecte terrain mobile, et mise en place de SIG pour des projets humanitaires, d'aide au développement et de gestion des risques naturels.</p>
+        <div class="service-targets">
+          <span class="target-chip">ONG</span>
+          <span class="target-chip">Bailleurs</span>
+          <span class="target-chip">OSM</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ENSEIGNEMENT -->
+<section id="enseignement">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-tag">Transmission du savoir</div>
+      <h2 class="section-title">Expertise<br>Académique</h2>
+      <p class="section-lead">Chargé d'enseignement depuis 2020 dans plusieurs universités françaises de premier rang, je mets mon expérience terrain au service de la formation des prochaines générations de géomaticiens africains et européens.</p>
+    </div>
+
+    <div class="teaching-grid fade-in">
+      <div class="teaching-block">
+        <h3>Programmes enseignés</h3>
+        <ul>
+          <li>QGIS – initiation et niveau avancé</li>
+          <li>ArcGIS Pro – analyse spatiale avancée</li>
+          <li>SIG Web open source (Geoserver, PostGIS, Leaflet)</li>
+          <li>Bases de données PostgreSQL/PostGIS</li>
+          <li>Méthodes d'analyse territoriale</li>
+          <li>Cartographie thématique et visualisation</li>
+        </ul>
+      </div>
+      <div class="teaching-block">
+        <h3>Établissements partenaires</h3>
+        <ul>
+          <li>Université Paris Nanterre</li>
+          <li>Université Paris-Saclay</li>
+          <li>MNHN – Muséum National d'Histoire Naturelle</li>
+          <li>CY Cergy Paris Université</li>
+          <li>EHESS – Sciences Sociales</li>
+          <li>Ouvert aux universités africaines</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="africa-focus fade-in">
+      <div class="africa-icon">🌍</div>
+      <div>
+        <h3>Engagement envers l'Afrique</h3>
+        <p>Né au Burkina Faso, formé entre Ouagadougou et Paris, je souhaite contribuer activement au renforcement des capacités géomatiques en Afrique. Membre actif du Réseau des Professionnels Africains de Géomatique (RPAG), je suis disponible pour des missions d'enseignement, de consulting ou de mise en place de programmes SIG dans les universités et institutions du Burkina Faso et de toute l'Afrique subsaharienne.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARCOURS -->
+<section id="parcours">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-tag">Expériences</div>
+      <h2 class="section-title">Parcours<br>Professionnel</h2>
+    </div>
+    <div class="timeline fade-in">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2024 → Présent</div>
+        <div class="timeline-role">Responsable du Service SIG</div>
+        <div class="timeline-org">Syndicat Mixte Thève-Ysieux-Nonette, Asnières-sur-Oise · CDI</div>
+        <ul class="timeline-points">
+          <li>Mise en place d'une architecture SIG complète sous ArcGIS</li>
+          <li>Structuration des données réseaux, cadastrales et patrimoniales</li>
+          <li>Implémentation du portail cartographique et déploiement d'applications métiers</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2022 – 2024</div>
+        <div class="timeline-role">Chef de Projet SIG – Webmapping</div>
+        <div class="timeline-org">Conseil Départemental de la Seine-Saint-Denis, Bobigny · CDD</div>
+        <ul class="timeline-points">
+          <li>Déploiement d'ArcGIS Enterprise pour la collectivité de 1,7M d'habitants</li>
+          <li>Ouverture du portail cartographique au grand public</li>
+          <li>Encadrement et formation de l'équipe géomatique</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2021 – 2022</div>
+        <div class="timeline-role">Ingénieur Géomatique Smart City</div>
+        <div class="timeline-org">Gouvernement Monégasque – Synergie Technologie, Monaco · CDI</div>
+        <ul class="timeline-points">
+          <li>Administration de la plateforme ArcGIS Enterprise & ArcGIS Online</li>
+          <li>Déploiement d'applications mobiles pour la collecte terrain</li>
+          <li>Structuration des données interservices gouvernementaux</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2020 – 2026</div>
+        <div class="timeline-role">Chargé d'Enseignement SIG</div>
+        <div class="timeline-org">Universités de Nanterre, Paris-Saclay, MNHN, CergyParis · Freelance</div>
+        <ul class="timeline-points">
+          <li>Cours QGIS et ArcGIS Pro (initiation + avancé)</li>
+          <li>SIG Web open source : Geoserver, PostGIS, Leaflet</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2019 – 2020</div>
+        <div class="timeline-role">Ingénieur Géomaticien</div>
+        <div class="timeline-org">CA Grand Paris Sud Seine Essonne Sénart, Evry · CDD</div>
+        <ul class="timeline-points">
+          <li>Administration du SIG intercommunal</li>
+          <li>Assistance à maîtrise d'ouvrage et contrôle des bases de données</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- OUTILS -->
+<section id="outils">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-tag">Stack technique</div>
+      <h2 class="section-title">Outils &<br>Compétences</h2>
+    </div>
+    <div class="tools-layout fade-in">
+      <div>
+        <div class="tool-category">
+          <div class="tool-cat-label">SIG Desktop</div>
+          <div class="tool-tags">
+            <span class="tool-tag">ArcGIS Pro</span>
+            <span class="tool-tag">ArcMap</span>
+            <span class="tool-tag">QGIS</span>
+            <span class="tool-tag">FME</span>
+            <span class="tool-tag">AutoCAD Map 2D</span>
+            <span class="tool-tag">1Water</span>
+          </div>
+        </div>
+        <div class="tool-category">
+          <div class="tool-cat-label">SIG Web & Plateforme</div>
+          <div class="tool-tags">
+            <span class="tool-tag">ArcGIS Enterprise</span>
+            <span class="tool-tag">ArcGIS Online</span>
+            <span class="tool-tag">Portal for ArcGIS</span>
+            <span class="tool-tag">Geoserver</span>
+            <span class="tool-tag">GéoGénérateur</span>
+            <span class="tool-tag">Arcopole Builder</span>
+          </div>
+        </div>
+        <div class="tool-category">
+          <div class="tool-cat-label">SIG Mobile & Collecte</div>
+          <div class="tool-tags">
+            <span class="tool-tag">Field Map</span>
+            <span class="tool-tag">Survey123</span>
+            <span class="tool-tag">QuickCapture</span>
+            <span class="tool-tag">QField</span>
+            <span class="tool-tag">KoboCollect</span>
+          </div>
+        </div>
+        <div class="tool-category">
+          <div class="tool-cat-label">Bases de données & Programmation</div>
+          <div class="tool-tags">
+            <span class="tool-tag">PostgreSQL</span>
+            <span class="tool-tag">PostGIS</span>
+            <span class="tool-tag">MySQL</span>
+            <span class="tool-tag">SQL</span>
+            <span class="tool-tag">Python</span>
+            <span class="tool-tag">Arcade</span>
+            <span class="tool-tag">HTML5/CSS3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="certifs-block">
+        <h3>Formations & Certifications</h3>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <p><strong>CNFPT</strong> – Conduite de projet, méthodes Agile/SCRUM, management, animation de réunions</p>
+        </div>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <p><strong>Esri (ArcGIS)</strong> – Python for ArcGIS, Stratégie de plateforme, Migration ArcMap → ArcGIS Pro</p>
+        </div>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <p><strong>1Spatial</strong> – FME Desktop et Onhys One</p>
+        </div>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <p><strong>Cyril Group</strong> – PostgreSQL/PostGIS, GéoCadastre, HTML5/CSS3, AutoCAD</p>
+        </div>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <p><strong>Master 2</strong> Géomatique – Université de Cergy-Pontoise (2019)</p>
+        </div>
+        <div class="certif-item">
+          <div class="certif-dot"></div>
+          <p><strong>Master</strong> Sciences Sociales / Territoire – EHESS Paris (2018)</p>
+        </div>
+
+        <div style="margin-top:2rem; padding:1.5rem; background:var(--sand); border-left:3px solid var(--savanna);">
+          <div class="section-tag" style="margin-bottom:0.5rem;">Engagement bénévole</div>
+          <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">
+            Membre actif de <strong style="color:var(--earth)">CartONG</strong>, <strong style="color:var(--earth)">OpenStreetMap</strong>, <strong style="color:var(--earth)">JobIRL</strong> et de la <strong style="color:var(--earth)">Géocommunauté Esri</strong>. Réseau des Professionnels Africains de Géomatique (RPAG).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-tag">Travaillons ensemble</div>
+      <h2 class="section-title">Me Contacter</h2>
+    </div>
+    <div class="contact-layout fade-in">
+      <div class="contact-text">
+        <p>Vous êtes une université africaine, un gouvernement, une ONG, ou une entreprise souhaitant structurer vos données géospatiales ? Ou vous cherchez un formateur SIG expert pour vos équipes ?</p>
+        <p>Je suis disponible pour des missions de consulting, enseignement, formation ou déploiement de systèmes d'information géographique. Mobilité nationale et internationale.</p>
+        <div class="contact-infos">
+          <div class="contact-line">
+            <div class="contact-icon">📞</div>
+            <a href="tel:+33769148826">+33 7 69 14 88 26</a>
+          </div>
+          <div class="contact-line">
+            <div class="contact-icon">✉️</div>
+            <a href="mailto:gagbaz@gmail.com">gagbaz@gmail.com</a>
+          </div>
+          <div class="contact-line">
+            <div class="contact-icon">💼</div>
+            <a href="https://www.linkedin.com/in/bazileg-51711588/" target="_blank">LinkedIn – Bazile Gagré</a>
+          </div>
+          <div class="contact-line">
+            <div class="contact-icon">📍</div>
+            <span>France · Disponibilité : 3 mois · Mobilité nationale & internationale</span>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="return false;">
+        <div class="form-row">
+          <input class="form-input" type="text" placeholder="Votre nom">
+          <input class="form-input" type="email" placeholder="Votre email">
+        </div>
+        <input class="form-input" type="text" placeholder="Organisation / Institution">
+        <input class="form-input" type="text" placeholder="Objet de votre demande">
+        <textarea class="form-textarea" placeholder="Décrivez votre besoin (formation, consulting, projet SIG…)"></textarea>
+        <button class="btn-send" type="submit">Envoyer le message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">B.<span>Gagré</span> — Géomaticien Senior</div>
+  <p>© 2025 Bazile Gagré · Géomaticien Senior & Expert SIG</p>
+  <p>RPAG · CartONG · OpenStreetMap</p>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('ring');
+  document.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(${e.clientX - 6}px, ${e.clientY - 6}px)`;
+    ring.style.transform = `translate(${e.clientX - 18}px, ${e.clientY - 18}px)`;
+  });
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
